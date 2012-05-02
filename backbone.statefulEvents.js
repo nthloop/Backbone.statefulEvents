@@ -1,10 +1,9 @@
-;(function (Backbone, _) {
-
-// Backbone.StatefulEventView.js, v0.1.0
+// Backbone.StatefulEventView.js, v0.1.1
 
 // (c) 2012 Ankit Solanki, nth loop.
 // May be freely distributed under an MIT license.
 
+;(function (Backbone, _) {
 
 // Extend Backbone.View to create Backbone.StatefulEventView.
 Backbone.StatefulEventView = Backbone.View.extend({
