@@ -10,11 +10,29 @@
 Backbone.StatefulEventView = Backbone.View.extend({
 
   // Overload `Backbone.View.delegateEvents`.
-  // Call both the original `delegateEvents` and our
-  // `delegateStatefulEvents` methods.
   delegateEvents: function (events) {
-    Backbone.View.prototype.delegateEvents.call(this, events);
+    // Remove old event handlers
+    this.undelegateEvents();
+
+    // Use a temporary flag to prevent further undelegateEvents calls.
+    // This is because the original `delegateEvents` also calls `undelegateEvents`,
+    // and we want to prevent un-binding of the `statefulEvents`.
+    this.ignoreUndelegate = true;
+
+    // Add stateful events first, and than the default events hash
     this.delegateStatefulEvents();
+    Backbone.View.prototype.delegateEvents.call(this, events);
+
+    // Delete the temporary flag
+    delete this.ignoreUndelegate;
+  },
+
+  // Overloading `Backbone.View.undelegateEvents`.
+  // The only change here is that we ignore the function call if
+  // the temporary `ignoreUndelegate` flag is set.
+  undelegateEvents: function () {
+    if (this.ignoreUndelegate) return;
+    Backbone.View.prototype.undelegateEvents.call(this);
   },
 
   // The `delegateStatefulEvents` method behaves like `delegateEvents`.
